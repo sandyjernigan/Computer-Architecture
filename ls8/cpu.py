@@ -2,6 +2,10 @@
 
 import sys
 
+LDI = 0b10000010
+PRN = 0b01000111
+HLT = 0b00000001
+
 class CPU:
     """Main CPU class."""
 
@@ -73,5 +77,11 @@ class CPU:
         """Run the CPU."""
         # read the memory address that's stored in register PC and store that result in IR
         IR = self.ram_read(self.pc)
+        running = True
 
-        pass
+        while running:
+
+            # exit the loop if a HLT instruction is encountered
+            if IR == HLT:
+                self.pc += 1
+                running = False

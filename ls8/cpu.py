@@ -90,3 +90,7 @@ class CPU:
             elif IR == LDI:
                 self.pc += 3
                 pass
+            
+            # This is a very similar process to adding LDI, but the handler is simpler. See the LS-8 spec.
+            elif IR == PRN:
+                self.pc += 2

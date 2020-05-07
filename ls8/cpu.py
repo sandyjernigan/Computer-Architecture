@@ -85,3 +85,8 @@ class CPU:
             if IR == HLT:
                 self.pc += 1
                 running = False
+
+            # This instruction sets a specified register to a specified value.
+            elif IR == LDI:
+                self.pc += 3
+                pass

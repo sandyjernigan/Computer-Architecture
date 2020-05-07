@@ -94,6 +94,8 @@ class CPU:
                 self.pc += 3
                 pass
             
-            # This is a very similar process to adding LDI, but the handler is simpler. See the LS-8 spec.
+            # Print numeric value stored in the given register.
             elif IR == PRN:
+                register = self._memory[self.pc + 1]
+                print (register)
                 self.pc += 2

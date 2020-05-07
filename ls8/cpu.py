@@ -68,4 +68,7 @@ class CPU:
     def ram_read(self, address):
         # ram_read() should accept the address to read and return the value stored there.
         return self._memory[address]
+
+    def ram_write(self, address, value):
+        self._memory[address] = value
     

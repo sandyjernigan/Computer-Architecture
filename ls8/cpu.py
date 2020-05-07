@@ -88,14 +88,14 @@ class CPU:
 
             # This instruction sets a specified register to a specified value.
             elif IR == LDI:
-                register = self._memory[self.pc + 1]
-                value = self._memory[self.pc + 2]
+                register = ram_read(self.pc + 1)
+                value = ram_read(self.pc + 2)
                 self.registers[register] = value
                 self.pc += 3
                 pass
             
             # Print numeric value stored in the given register.
             elif IR == PRN:
-                register = self._memory[self.pc + 1]
+                register = ram_read(self.pc + 1)
                 print (register)
                 self.pc += 2

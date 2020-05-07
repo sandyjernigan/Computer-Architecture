@@ -12,7 +12,7 @@ class CPU:
     def __init__(self):
         """Construct a new CPU."""
         self.pc = 0
-        self._memory = [0] * 16 # 256 bytes of memory
+        self.ram = [0] * 16 # 256 bytes of memory
         self.registers = [0] * 8 # 8 general-purpose registers.
 
     def load(self):
@@ -68,10 +68,10 @@ class CPU:
 
     def ram_read(self, address):
         # ram_read() should accept the address to read and return the value stored there.
-        return self._memory[address]
+        return self.ram[address]
 
     def ram_write(self, address, value):
-        self._memory[address] = value
+        self.ram[address] = value
     
     def run(self):
         """Run the CPU."""
@@ -88,14 +88,14 @@ class CPU:
 
             # This instruction sets a specified register to a specified value.
             elif IR == LDI:
-                register = ram_read(self.pc + 1)
-                value = ram_read(self.pc + 2)
+                register = self.ram_read(self.pc + 1)
+                value = self.ram_read(self.pc + 2)
                 self.registers[register] = value
                 self.pc += 3
                 pass
             
             # Print numeric value stored in the given register.
             elif IR == PRN:
-                register = ram_read(self.pc + 1)
+                register = self.ram_read(self.pc + 1)
                 print (register)
                 self.pc += 2

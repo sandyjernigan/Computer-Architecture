@@ -11,9 +11,12 @@ class CPU:
 
     def __init__(self):
         """Construct a new CPU."""
+        # Program Counter
         self.pc = 0
-        self.ram = [0] * 16 # 256 bytes of memory
-        self.registers = [0] * 8 # 8 general-purpose registers.
+        # Ram - 256 bytes of memory
+        self.ram = [0] * 256
+        # Registers - 8 general-purpose registers.
+        self.registers = [0] * 8 
 
     def load(self):
         """Load a program into memory."""
@@ -75,11 +78,11 @@ class CPU:
     
     def run(self):
         """Run the CPU."""
-        # read the memory address that's stored in register PC and store that result in IR
-        IR = self.ram_read(self.pc)
         running = True
 
         while running:
+            # read the memory address that's stored in register PC and store that result in IR
+            IR = self.ram_read(self.pc)
 
             # exit the loop if a HLT instruction is encountered
             if IR == HLT:
@@ -92,10 +95,14 @@ class CPU:
                 value = self.ram_read(self.pc + 2)
                 self.registers[register] = value
                 self.pc += 3
-                pass
             
             # Print numeric value stored in the given register.
             elif IR == PRN:
-                register = self.ram_read(self.pc + 1)
+                # get register address from ram
+                address = self.ram_read(self.pc + 1)
+                # load value from registers
+                register = self.registers[address]
+                # print value
                 print (register)
+                # move to next line
                 self.pc += 2

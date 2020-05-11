@@ -52,7 +52,7 @@ class CPU:
         # Ram - 256 bytes of memory
         self.ram = [0] * 256
         # Registers - 8 general-purpose registers.
-        self.registers = [0] * 8
+        self.reg = [0] * 8
 
     def load(self):
         """Load a program into memory."""
@@ -144,7 +144,7 @@ class CPU:
             pass
         elif op == "MUL":
             """ Multiply the values in two registers together and store the result in registerA. """
-            pass
+            self.reg[reg_a] *= self.reg[reg_b]
         elif op == "NOT":
             """ Perform a bitwise-NOT on the value in a register, storing the result in the register. """
             pass
@@ -216,6 +216,18 @@ class CPU:
             elif IR == OP("LDI"): self.OPS("LDI")
             # PRN
             elif IR == OP("PRN"): self.OPS("PRN")
+
+            # ALU Functions
+            # MUL
+            elif IR == OP("MUL"): 
+                self.alu("MUL", self.ram_read(self.pc + 1), self.ram_read(self.pc + 2))
+                # move to next counter
+                self.pc += 3
+
+            # Else
+            else:
+                print ("Unknown request")
+                self.OPS("HLT")
 
     def OPS(self, op):
         # Call Operation by opcode
@@ -289,7 +301,7 @@ class CPU:
             # get value from the next ram value
             value = self.ram_read(self.pc + 2)
             # store value into specified register
-            self.registers[register] = value
+            self.reg[register] = value
             # move to next counter
             self.pc += 3
         
@@ -314,7 +326,7 @@ class CPU:
             # get register address from ram
             address = self.ram_read(self.pc + 1)
             # load value from registers
-            register = self.registers[address]
+            register = self.reg[address]
             # print value
             print (register)
             # move to next counter

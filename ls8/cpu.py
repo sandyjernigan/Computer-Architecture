@@ -2,9 +2,45 @@
 
 import sys
 
-LDI = 0b10000010
-PRN = 0b01000111
-HLT = 0b00000001
+# Opcodes
+OPCODES = {
+    "ADD":  {"type": 2, "code": "10100000"},
+    "AND":  {"type": 2, "code": "10101000"},
+    "CALL": {"type": 1, "code": "01010000"},
+    "CMP":  {"type": 2, "code": "10100111"},
+    "DEC":  {"type": 1, "code": "01100110"},
+    "DIV":  {"type": 2, "code": "10100011"},
+    "HLT":  {"type": 0, "code": "00000001"},
+    "INC":  {"type": 1, "code": "01100101"},
+    "INT":  {"type": 1, "code": "01010010"},
+    "IRET": {"type": 0, "code": "00010011"},
+    "JEQ":  {"type": 1, "code": "01010101"},
+    "JGE":  {"type": 1, "code": "01011010"},
+    "JGT":  {"type": 1, "code": "01010111"},
+    "JLE":  {"type": 1, "code": "01011001"},
+    "JLT":  {"type": 1, "code": "01011000"},
+    "JMP":  {"type": 1, "code": "01010100"},
+    "JNE":  {"type": 1, "code": "01010110"},
+    "LD":   {"type": 2, "code": "10000011"},
+    "LDI":  {"type": 8, "code": "10000010"},
+    "MOD":  {"type": 2, "code": "10100100"},
+    "MUL":  {"type": 2, "code": "10100010"},
+    "NOP":  {"type": 0, "code": "00000000"},
+    "NOT":  {"type": 1, "code": "01101001"},
+    "OR":   {"type": 2, "code": "10101010"},
+    "POP":  {"type": 1, "code": "01000110"},
+    "PRA":  {"type": 1, "code": "01001000"},
+    "PRN":  {"type": 1, "code": "01000111"},
+    "PUSH": {"type": 1, "code": "01000101"},
+    "RET":  {"type": 0, "code": "00010001"},
+    "SHL":  {"type": 2, "code": "10101100"},
+    "SHR":  {"type": 2, "code": "10101101"},
+    "ST":   {"type": 2, "code": "10000100"},
+    "SUB":  {"type": 2, "code": "10100001"},
+    "XOR":  {"type": 2, "code": "10101011"},
+}
+def OP(opcode):
+    return int("0b" + OPCODES[opcode]["code"], 2)
 
 class CPU:
     """Main CPU class."""
@@ -16,7 +52,7 @@ class CPU:
         # Ram - 256 bytes of memory
         self.ram = [0] * 256
         # Registers - 8 general-purpose registers.
-        self.registers = [0] * 8 
+        self.registers = [0] * 8
 
     def load(self):
         """Load a program into memory."""
@@ -38,7 +74,6 @@ class CPU:
         for instruction in program:
             self.ram[address] = instruction
             address += 1
-
 
     def alu(self, op, reg_a, reg_b):
         """ALU operations."""
@@ -81,21 +116,26 @@ class CPU:
     def run(self):
         """Run the CPU."""
         running = True
+        i = 0
 
-        while running:
+        while running and i < 4:
+            i+=1
             # read the memory address that's stored in register PC and store that result in IR
             
             # `IR`: Instruction Register, contains a copy of the currently executing instruction
             IR = self.ram_read(self.pc)
 
+            # HLT
             # exit the loop if a HLT instruction is encountered
-            if IR == HLT:
+            if IR == OP("HLT"):
                 self.pc += 1
                 # stop running
+                # print ("Program Stopped.")
                 running = False
 
+            # LDI
             # This instruction sets a specified register to a specified value.
-            elif IR == LDI:
+            elif IR == OP("LDI"):
                 # get register address from ram value
                 register = self.ram_read(self.pc + 1)
                 # get value from the next ram value
@@ -105,8 +145,9 @@ class CPU:
                 # move to next counter
                 self.pc += 3
             
+            # PRN
             # Print numeric value stored in the given register.
-            elif IR == PRN:
+            elif IR == OP("PRN"):
                 # get register address from ram
                 address = self.ram_read(self.pc + 1)
                 # load value from registers
@@ -115,3 +156,4 @@ class CPU:
                 print (register)
                 # move to next counter
                 self.pc += 2
+

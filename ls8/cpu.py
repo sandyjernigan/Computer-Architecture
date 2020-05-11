@@ -59,7 +59,20 @@ class CPU:
 
         address = 0
 
-        # For now, we've just hardcoded a program:
+        # reset the memory
+        self.ram = [0] * 256
+
+        # get the filename from arguments
+        if len(sys.argv) != 2:
+            print("Need filename to run program.")
+            sys.exit(1)
+        
+        filename = sys.argv[1]
+        with open(filename) as f:
+            for line in f:
+                print(line)
+
+        # Read from file and load
 
         program = [
             # From print8.ls8

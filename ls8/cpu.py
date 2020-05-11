@@ -11,7 +11,7 @@ class CPU:
 
     def __init__(self):
         """Construct a new CPU."""
-        # Program Counter
+        # `PC`: Program Counter, address of the currently executing instruction
         self.pc = 0
         # Ram - 256 bytes of memory
         self.ram = [0] * 256
@@ -70,10 +70,12 @@ class CPU:
         print()
 
     def ram_read(self, address):
+        """Reads information stored in ram at given address."""
         # ram_read() should accept the address to read and return the value stored there.
         return self.ram[address]
 
     def ram_write(self, address, value):
+        """Stores given value to ram at the given address."""
         self.ram[address] = value
     
     def run(self):
@@ -82,18 +84,25 @@ class CPU:
 
         while running:
             # read the memory address that's stored in register PC and store that result in IR
+            
+            # `IR`: Instruction Register, contains a copy of the currently executing instruction
             IR = self.ram_read(self.pc)
 
             # exit the loop if a HLT instruction is encountered
             if IR == HLT:
                 self.pc += 1
+                # stop running
                 running = False
 
             # This instruction sets a specified register to a specified value.
             elif IR == LDI:
+                # get register address from ram value
                 register = self.ram_read(self.pc + 1)
+                # get value from the next ram value
                 value = self.ram_read(self.pc + 2)
+                # store value into specified register
                 self.registers[register] = value
+                # move to next counter
                 self.pc += 3
             
             # Print numeric value stored in the given register.
@@ -104,5 +113,5 @@ class CPU:
                 register = self.registers[address]
                 # print value
                 print (register)
-                # move to next line
+                # move to next counter
                 self.pc += 2

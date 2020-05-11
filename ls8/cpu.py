@@ -40,7 +40,6 @@ OPCODES = {
     "XOR":  {"type": 2, "code": "10101011"},
 }
 def OP(opcode):
-    # return int("0b" + OPCODES[opcode]["code"], 2)
     return int(OPCODES[opcode]["code"], 2)
 
 class CPU:
@@ -103,8 +102,70 @@ class CPU:
         """ALU operations."""
 
         if op == "ADD":
+            # Add the value in two registers and store the result in registerA.
             self.reg[reg_a] += self.reg[reg_b]
         #elif op == "SUB": etc
+        elif op == "AND":
+            # Bitwise-AND the values in registerA and registerB, then store the result in registerA.
+            pass
+        elif op == "CMP":
+            """
+            Compare the values in two registers.
+
+            * If they are equal, set the Equal `E` flag to 1, otherwise set it to 0.
+
+            * If registerA is less than registerB, set the Less-than `L` flag to 1,
+            otherwise set it to 0.
+
+            * If registerA is greater than registerB, set the Greater-than `G` flag
+            to 1, otherwise set it to 0.
+            """
+            pass
+        elif op == "DEC":
+            """Decrement (subtract 1 from) the value in the given register."""
+            pass
+        elif op == "DIV":
+            """
+            Divide the value in the first register by the value in the second,
+            storing the result in registerA.
+
+            If the value in the second register is 0, the system should print an
+            error message and halt.
+            """
+            pass
+        elif op == "INC":
+            """Increment (add 1 to) the value in the given register."""
+            pass
+        elif op == "MOD":
+            """
+            Divide the value in the first register by the value in the second,  storing the _remainder_ of the result in registerA.
+            If the value in the second register is 0, the system should print an error message and halt.
+            """
+            pass
+        elif op == "MUL":
+            """ Multiply the values in two registers together and store the result in registerA. """
+            pass
+        elif op == "NOT":
+            """ Perform a bitwise-NOT on the value in a register, storing the result in the register. """
+            pass
+        elif op == "OR":
+            """ Perform a bitwise-OR between the values in registerA and registerB, storing the result in registerA. """
+            pass
+        elif op == "SHL":
+            """ Shift the value in registerA left by the number of bits specified in registerB, 
+                filling the low bits with 0. """
+            pass
+        elif op == "SHR":
+            """ Shift the value in registerA right by the number of bits specified in registerB,
+                filling the high bits with 0. """
+            pass
+        elif op == "SUB":
+            """ Subtract the value in the second register from the first, storing the result in registerA. """
+            pass
+        elif op == "XOR":
+            """ Perform a bitwise-XOR between the values in registerA and registerB, storing the
+                result in registerA. """
+            pass
         else:
             raise Exception("Unsupported ALU operation")
 
@@ -137,35 +198,6 @@ class CPU:
         """Stores given value to ram at the given address."""
         self.ram[address] = value
     
-    def HLT(self):
-        """exit the loop if a HLT instruction is encountered"""
-        self.pc += 1
-        # stop running
-        # print ("Program Stopped.")
-        running = False
-
-    def LDI(self):
-        """This instruction sets a specified register to a specified value."""
-        # get register address from ram value
-        register = self.ram_read(self.pc + 1)
-        # get value from the next ram value
-        value = self.ram_read(self.pc + 2)
-        # store value into specified register
-        self.registers[register] = value
-        # move to next counter
-        self.pc += 3
-    
-    def PRN(self):
-        """Print numeric value stored in the given register."""
-        # get register address from ram
-        address = self.ram_read(self.pc + 1)
-        # load value from registers
-        register = self.registers[address]
-        # print value
-        print (register)
-        # move to next counter
-        self.pc += 2
-
     def run(self):
         """Run the CPU."""
         running = True
@@ -179,9 +211,127 @@ class CPU:
             IR = self.ram_read(self.pc)
 
             # HLT
-            if IR == OP("HLT"): self.HLT()
+            if IR == OP("HLT"): self.OPS("HLT")
             # LDI            
-            elif IR == OP("LDI"): self.LDI()
+            elif IR == OP("LDI"): self.OPS("LDI")
             # PRN
-            elif IR == OP("PRN"): self.PRN()
+            elif IR == OP("PRN"): self.OPS("PRN")
 
+    def OPS(self, op):
+        # Call Operation by opcode
+
+        if op == "CALL":
+            """ Calls a subroutine (function) at the address stored in the register. """
+            """
+            1. The address of the ***instruction*** _directly after_ `CALL` is pushed onto the stack. This allows us to return to where we left off when the subroutine finishes executing.
+            2. The PC is set to the address stored in the given register. We jump to that location in RAM and execute the first instruction in the subroutine. The PC can move forward or backwards from its current location.
+            """
+            pass
+
+        elif op == "HLT":
+            """ Halt the CPU (and exit the emulator). """
+            self.pc += 1
+            # stop running
+            # print ("Program Stopped.")
+            running = False
+
+        elif op == "INT":
+            """ Issue the interrupt number stored in the given register. """
+            # This will set the _n_th bit in the `IS` register to the value in the given register.
+            pass
+
+        elif op == "IRET":
+            """ Return from an interrupt handler.
+            1. Registers R6-R0 are popped off the stack in that order.
+            2. The `FL` register is popped off the stack.
+            3. The return address is popped off the stack and stored in `PC`.
+            4. Interrupts are re-enabled
+            """
+            pass
+        
+        elif op == "JEQ":
+            """ If `equal` flag is set (true), jump to the address stored in the given register. """
+            pass
+
+        elif op == "JGE":
+            """ If `greater-than` flag or `equal` flag is set (true), jump to the address stored in the given register. """
+            pass
+
+        elif op == "JGT":
+            """ If `greater-than` flag is set (true), jump to the address stored in the given register. """
+            pass
+
+        elif op == "JLE":
+            """ If `less-than` flag or `equal` flag is set (true), jump to the address stored in the given register."""
+            pass
+
+        elif op == "JLT":
+            """ If `less-than` flag is set (true), jump to the address stored in the given register. """
+            pass
+
+        elif op == "JMP":
+            """ Jump to the address stored in the given register. """
+            # Set the `PC` to the address stored in the given register.
+            pass
+
+        elif op == "JNE":
+            """ If `E` flag is clear (false, 0), jump to the address stored in the given register. """
+            pass
+
+        elif op == "LD":
+            """ Loads registerA with the value at the memory address stored in registerB. """
+            # This opcode reads from memory.
+
+        elif op == "LDI":
+            """ Set the value of a register to an integer. """
+            # get register address from ram value
+            register = self.ram_read(self.pc + 1)
+            # get value from the next ram value
+            value = self.ram_read(self.pc + 2)
+            # store value into specified register
+            self.registers[register] = value
+            # move to next counter
+            self.pc += 3
+        
+        elif op == "NOP":
+            """ No operation. Do nothing for this instruction. """
+            pass
+
+        elif op == "POP":
+            """ Pop the value at the top of the stack into the given register. """
+            # 1. Copy the value from the address pointed to by `SP` to the given register.
+            # 2. Increment `SP`.
+            pass
+
+        elif op == "PRA":
+            """ Print alpha character value stored in the given register. """
+            # Print to the console the ASCII character corresponding to the value in the register.
+            pass
+        
+        elif op == "PRN":
+            """ Print numeric value stored in the given register. """
+            # Print to the console the decimal integer value that is stored in the given register.
+            # get register address from ram
+            address = self.ram_read(self.pc + 1)
+            # load value from registers
+            register = self.registers[address]
+            # print value
+            print (register)
+            # move to next counter
+            self.pc += 2
+
+        elif op == "PUSH":
+            """ Push the value in the given register on the stack. """
+            # 1. Decrement the `SP`.
+            # 2. Copy the value in the given register to the address pointed to by `SP`.
+            pass
+
+        elif op == "RET":
+            """ Return from subroutine. """
+            # Pop the value from the top of the stack and store it in the `PC`.
+            pass
+
+        elif op == "ST":
+            """ Store value in registerB in the address stored in registerA. """
+            # This opcode writes to memory.
+            pass

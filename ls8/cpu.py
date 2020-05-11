@@ -137,6 +137,35 @@ class CPU:
         """Stores given value to ram at the given address."""
         self.ram[address] = value
     
+    def HLT(self):
+        """exit the loop if a HLT instruction is encountered"""
+        self.pc += 1
+        # stop running
+        # print ("Program Stopped.")
+        running = False
+
+    def LDI(self):
+        """This instruction sets a specified register to a specified value."""
+        # get register address from ram value
+        register = self.ram_read(self.pc + 1)
+        # get value from the next ram value
+        value = self.ram_read(self.pc + 2)
+        # store value into specified register
+        self.registers[register] = value
+        # move to next counter
+        self.pc += 3
+    
+    def PRN(self):
+        """Print numeric value stored in the given register."""
+        # get register address from ram
+        address = self.ram_read(self.pc + 1)
+        # load value from registers
+        register = self.registers[address]
+        # print value
+        print (register)
+        # move to next counter
+        self.pc += 2
+
     def run(self):
         """Run the CPU."""
         running = True
@@ -150,34 +179,9 @@ class CPU:
             IR = self.ram_read(self.pc)
 
             # HLT
-            # exit the loop if a HLT instruction is encountered
-            if IR == OP("HLT"):
-                self.pc += 1
-                # stop running
-                # print ("Program Stopped.")
-                running = False
-
-            # LDI
-            # This instruction sets a specified register to a specified value.
-            elif IR == OP("LDI"):
-                # get register address from ram value
-                register = self.ram_read(self.pc + 1)
-                # get value from the next ram value
-                value = self.ram_read(self.pc + 2)
-                # store value into specified register
-                self.registers[register] = value
-                # move to next counter
-                self.pc += 3
-            
+            if IR == OP("HLT"): self.HLT()
+            # LDI            
+            elif IR == OP("LDI"): self.LDI()
             # PRN
-            # Print numeric value stored in the given register.
-            elif IR == OP("PRN"):
-                # get register address from ram
-                address = self.ram_read(self.pc + 1)
-                # load value from registers
-                register = self.registers[address]
-                # print value
-                print (register)
-                # move to next counter
-                self.pc += 2
+            elif IR == OP("PRN"): self.PRN()
 

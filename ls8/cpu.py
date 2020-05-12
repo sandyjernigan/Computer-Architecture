@@ -216,7 +216,7 @@ class CPU:
             # PRN
             elif IR == OP("PRN"): self.OPS("PRN")
 
-            # ALU Functions
+            # ALU Functions - self.alu(op, reg_a, reg_b)
             # MUL
             elif IR == OP("MUL"): 
                 self.alu("MUL", self.ram_read(self.pc + 1), self.ram_read(self.pc + 2))

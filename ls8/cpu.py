@@ -56,7 +56,6 @@ class CPU:
 
     def load(self):
         """Load a program into memory."""
-
         address = 0
 
         # reset the memory

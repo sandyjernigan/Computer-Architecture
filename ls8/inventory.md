@@ -108,7 +108,7 @@ INTHANDLER (address 17):
 
 ### print8.ls8
 > Print the number 8
-* `LDI R0,8` -- set value to register 0
+* `LDI R0,8` -- set value "8" to register 0
 * `PRN R0` -- print register 0
 * `HLT` -- stop
 
@@ -149,20 +149,20 @@ HELLO (address 38):
 `00001010 # 0x0a`
 
 ### stack.ls8
-* LDI R0,1
-* LDI R1,2
-* PUSH R0
-* PUSH R1
-* LDI R0,3
-* POP R0
-* PRN R0
-* LDI R0,4
-* PUSH R0
-* POP R2
-* POP R1
-* PRN R2
-* PRN R1
-* HLT
+* `LDI R0,1` -- set value "1" to register 0
+* `LDI R1,2` -- set value "2" to register 1
+* `PUSH R0` -- push value from register 0 to stack
+* `PUSH R1` -- push value from register 1 to stack
+* `LDI R0,3` -- set value "3" to register 3
+* `POP R0` -- pop value from register 0
+* `PRN R0` -- print value on register 0 (Prints 2 because the orginial register 0 was removed)
+* `LDI R0,4` -- set value "4" to register 0
+* `PUSH R0` -- push value from register 0 to stack
+* `POP R2` -- pop value from register 2
+* `POP R1` -- pop value from register 1
+* `PRN R2` -- print value in register 2
+* `PRN R1` -- print value in register 1
+* `HLT` -- Stop
 
 ### stackoverflow.ls8
 * LDI R0,0
@@ -186,13 +186,21 @@ LOOP (address 9):
 
 ### PRN
 > Print numeric value stored in the given register.
-  "PRN":  "code": "01000111"
+"PRN":  "code": "01000111"
+
+### PUSH
+> Push the value in the given register on the stack.
+"PUSH": "code": "01000101"
+
+### POP
+> Pop the value at the top of the stack into the given register.
+"POP":  "code": "01000110"
 
 ## Type 2 - OP with 2 arguments
 
 ### LDI
 > Set the value of a register to an integer.
-  "LDI": "code": "10000010"
+"LDI": "code": "10000010"
 
 ## Type 8 - ALU Operations
 
@@ -277,15 +285,9 @@ LOOP (address 9):
 ### OR
 > To Do
   "OR":   {"type": 2, "code": "10101010"}
-### POP
-> To Do
-  "POP":  {"type": 1, "code": "01000110"}
 ### PRA
 > To Do
   "PRA":  {"type": 1, "code": "01001000"}
-### PUSH
-> To Do
-  "PUSH": {"type": 1, "code": "01000101"}
 ### RET
 > To Do
   "RET":  {"type": 0, "code": "00010001"}

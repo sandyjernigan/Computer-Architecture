@@ -28,10 +28,10 @@ OPCODES = {
     "NOP":  {"type": 9, "code": "00000000"},
     "NOT":  {"type": 9, "code": "01101001"},
     "OR":   {"type": 9, "code": "10101010"},
-    "POP":  {"type": 9, "code": "01000110"},
+    "POP":  {"type": 1, "code": "01000110"},
     "PRA":  {"type": 9, "code": "01001000"},
     "PRN":  {"type": 1, "code": "01000111"},
-    "PUSH": {"type": 9, "code": "01000101"},
+    "PUSH": {"type": 1, "code": "01000101"},
     "RET":  {"type": 9, "code": "00010001"},
     "SHL":  {"type": 9, "code": "10101100"},
     "SHR":  {"type": 9, "code": "10101101"},
@@ -53,6 +53,27 @@ class CPU:
         self.ram = [0] * 256
         # Registers - 8 general-purpose registers.
         self.reg = [0] * 8
+
+        """ General Registers """
+        # R5 is reserved as the interrupt mask (IM)
+        self.IM = 5
+
+        # R6 is reserved as the interrupt status (IS)
+        self.IS = 6
+
+        # R7 is reserved as the stack pointer (SP)
+        self.SP = 7
+        # store the top of memory into Register 7
+        self.reg[self.SP] = len(self.ram) - 1
+
+        """Internal Registers"""
+        # IR: Instruction Register, contains a copy of the currently executing instruction
+        self.ir = 0
+        # MAR: Memory Address Register, holds the memory address we're reading or writing
+        self.mar = 0
+        # MDR: Memory Data Register, holds the value to write or the value just read
+        self.mdr = 0
+
 
     def load(self):
         """Load a program into memory."""
@@ -214,17 +235,15 @@ class CPU:
         running = True
         i = 0
 
-        while running and i < 9:
+        while running and i < 99:
             i+=1
             # read the memory address that's stored in register PC and store that result in IR
-            
-            # `IR`: Instruction Register, contains a copy of the currently executing instruction
-            IR = self.ram_read(self.pc)
+            self.ir = self.ram_read(self.pc)
             OP = ""
             OP_type = ""
 
             for opcode in OPCODES:
-                if int(OPCODES[opcode]["code"], 2) == IR:
+                if int(OPCODES[opcode]["code"], 2) == self.ir:
                     OP = opcode
                     OP_type = OPCODES[opcode]["type"]
                     break
@@ -272,6 +291,8 @@ class CPU:
             else:
                 print (f"Unknown request on line: {self.pc}")
                 self.pc += 1
+            
+            # self.trace()
 
     def OPS(self, op, *args):
         # Call Operation by opcode
@@ -359,9 +380,10 @@ class CPU:
         # TODO
         elif op == "POP":
             """ Pop the value at the top of the stack into the given register. """
-            # 1. Copy the value from the address pointed to by `SP` to the given register.
-            # 2. Increment `SP`.
-            pass
+            # Copy the value from the address pointed to by `SP` to the given register.
+            self.reg[self.ram[args[0]]] = self.ram[self.reg[self.SP]]
+            # Increment `SP`.
+            self.reg[self.SP] += 1
 
         # TODO
         elif op == "PRA":
@@ -379,12 +401,12 @@ class CPU:
             # print value
             print (register)
 
-        # TODO
         elif op == "PUSH":
             """ Push the value in the given register on the stack. """
-            # 1. Decrement the `SP`.
-            # 2. Copy the value in the given register to the address pointed to by `SP`.
-            pass
+            # Decrement the `SP`.
+            self.reg[self.SP] -= 1
+            # Copy the value in the given register to the address pointed to by `SP`.
+            self.ram[self.reg[self.SP]] = self.reg[self.ram[args[0]]]
 
         # TODO
         elif op == "RET":

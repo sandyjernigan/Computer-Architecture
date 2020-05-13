@@ -176,17 +176,33 @@ LOOP (address 9):
 
 # Opcodes
 
-## Type 0
+## Type 0 - OP with no arguments
 
 ### HLT
 > Halt the CPU (and exit the emulator).
-"HLT":  {"type": 0, "code": "00000001"}
+"HLT":  "code": "00000001"
 
-### IRET
-> To Do
-  "IRET": {"type": 0, "code": "00010011"}
+## Type 1 - OP with 1 argument
 
-## Type 1
+### PRN
+> Print numeric value stored in the given register.
+  "PRN":  "code": "01000111"
+
+## Type 2 - OP with 2 arguments
+
+### LDI
+> Set the value of a register to an integer.
+  "LDI": "code": "10000010"
+
+## Type 8 - ALU Operations
+
+### MUL
+> ALU operation - Multiply the values in two registers together and store the result in registerA.
+  "MUL":  {"type": 2, "code": "10100010"}
+
+
+
+## Type 9 - TO DO 
 
 ### CALL
 > To Do
@@ -208,12 +224,6 @@ LOOP (address 9):
 > To Do
   "JEQ":  {"type": 1, "code": "01010101"}
 
-### PRN
-> Print numeric value stored in the given register.
-  "PRN":  {"type": 1, "code": "01000111"}
-
-## Type 2
-
 ### ADD
 > To Do
   "ADD":  {"type": 2, "code": "10100000"}
@@ -230,18 +240,9 @@ LOOP (address 9):
 > To Do
   "DIV":  {"type": 2, "code": "10100011"}
 
-### MUL
-> ALU operation - Multiply the values in two registers together and store the result in registerA.
-  "MUL":  {"type": 2, "code": "10100010"}
-
-## Type 8
-
-### LDI
-> Set the value of a register to an integer.
-  "LDI":  {"type": 8, "code": "10000010"}
-
-
-## TO DO
+### IRET
+> To Do
+  "IRET": {"type": 0, "code": "00010011"}
 
 ### JGE
 > To Do
@@ -288,18 +289,23 @@ LOOP (address 9):
 ### RET
 > To Do
   "RET":  {"type": 0, "code": "00010001"}
+
 ### SHL
 > To Do
   "SHL":  {"type": 2, "code": "10101100"}
+
 ### SHR
 > To Do
   "SHR":  {"type": 2, "code": "10101101"}
+
 ### ST
 > To Do
   "ST":   {"type": 2, "code": "10000100"}
+
 ### SUB
 > To Do
   "SUB":  {"type": 2, "code": "10100001"}
+
 ### XOR
 > To Do
   "XOR":  {"type": 2, "code": "10101011"}

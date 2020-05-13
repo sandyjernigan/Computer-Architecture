@@ -202,27 +202,41 @@ class CPU:
         running = True
         i = 0
 
-        while running and i < 4:
+        while running and i < 99:
             i+=1
             # read the memory address that's stored in register PC and store that result in IR
             
             # `IR`: Instruction Register, contains a copy of the currently executing instruction
             IR = self.ram_read(self.pc)
+            OP = ""
+            OP_type = ""
 
-            # HLT
-            if IR == OP("HLT"): self.OPS("HLT")
-            # LDI            
-            elif IR == OP("LDI"): self.OPS("LDI")
-            # PRN
-            elif IR == OP("PRN"): self.OPS("PRN")
+            for opcode in OPCODES:
+                if int(OPCODES[opcode]["code"], 2) == IR:
+                    OP = opcode
+                    OP_type = OPCODES[opcode]["type"]
+                    break
 
-            # ALU Functions - self.alu(op, reg_a, reg_b)
-            # MUL
-            elif IR == OP("MUL"): 
-                self.alu("MUL", self.ram_read(self.pc + 1), self.ram_read(self.pc + 2))
-                # move to next counter
-                self.pc += 3
-
+            if not OP == "":
+                # Check Type
+                if OP_type == "":
+                    print ("Operation not found.")
+                elif OP_type == 0:
+                    self.OPS(OP)
+                elif OP_type == 1:
+                    # Operations
+                    self.OPS(OP)
+                elif OP_type == 2:
+                    # ALU Functions - self.alu(op, reg_a, reg_b)
+                    self.alu(OP, self.ram_read(self.pc + 1), self.ram_read(self.pc + 2))
+                    # move to next counter
+                    self.pc += 3
+                elif OP_type == 8:
+                    # Operations
+                    self.OPS(OP)
+                else:
+                    print ("Operation type not found.")
+                    self.OPS("HLT")
             # Else
             else:
                 print ("Unknown request")

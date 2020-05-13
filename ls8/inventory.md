@@ -173,3 +173,133 @@ LOOP (address 9):
 * ADD R0,R1
 * PUSH R0
 * JMP R3
+
+# Opcodes
+
+## Type 0
+
+### HLT
+> Halt the CPU (and exit the emulator).
+"HLT":  {"type": 0, "code": "00000001"}
+
+### IRET
+> To Do
+  "IRET": {"type": 0, "code": "00010011"}
+
+## Type 1
+
+### CALL
+> To Do
+  "CALL": {"type": 1, "code": "01010000"}
+
+### DEC
+> To Do
+  "DEC":  {"type": 1, "code": "01100110"}
+
+### INC
+> To Do
+  "INC":  {"type": 1, "code": "01100101"}
+
+### INT
+> To Do
+  "INT":  {"type": 1, "code": "01010010"}
+
+### JEQ
+> To Do
+  "JEQ":  {"type": 1, "code": "01010101"}
+
+### PRN
+> Print numeric value stored in the given register.
+  "PRN":  {"type": 1, "code": "01000111"}
+
+## Type 2
+
+### ADD
+> To Do
+  "ADD":  {"type": 2, "code": "10100000"}
+
+### AND
+> To Do
+  "AND":  {"type": 2, "code": "10101000"}
+
+### CMP
+> To Do
+  "CMP":  {"type": 2, "code": "10100111"}
+
+### DIV
+> To Do
+  "DIV":  {"type": 2, "code": "10100011"}
+
+### MUL
+> ALU operation - Multiply the values in two registers together and store the result in registerA.
+  "MUL":  {"type": 2, "code": "10100010"}
+
+## Type 8
+
+### LDI
+> Set the value of a register to an integer.
+  "LDI":  {"type": 8, "code": "10000010"}
+
+
+## TO DO
+
+### JGE
+> To Do
+  "JGE":  {"type": 1, "code": "01011010"}
+### JGT
+> To Do
+  "JGT":  {"type": 1, "code": "01010111"}
+### JLE
+> To Do
+  "JLE":  {"type": 1, "code": "01011001"}
+### JLT
+> To Do
+  "JLT":  {"type": 1, "code": "01011000"}
+### JMP
+> To Do
+  "JMP":  {"type": 1, "code": "01010100"}
+### JNE
+> To Do
+  "JNE":  {"type": 1, "code": "01010110"}
+### LD
+> To Do
+  "LD":   {"type": 2, "code": "10000011"}
+### MOD
+> To Do
+  "MOD":  {"type": 2, "code": "10100100"}
+### NOP
+> To Do
+  "NOP":  {"type": 0, "code": "00000000"}
+### NOT
+> To Do
+  "NOT":  {"type": 1, "code": "01101001"}
+### OR
+> To Do
+  "OR":   {"type": 2, "code": "10101010"}
+### POP
+> To Do
+  "POP":  {"type": 1, "code": "01000110"}
+### PRA
+> To Do
+  "PRA":  {"type": 1, "code": "01001000"}
+### PUSH
+> To Do
+  "PUSH": {"type": 1, "code": "01000101"}
+### RET
+> To Do
+  "RET":  {"type": 0, "code": "00010001"}
+### SHL
+> To Do
+  "SHL":  {"type": 2, "code": "10101100"}
+### SHR
+> To Do
+  "SHR":  {"type": 2, "code": "10101101"}
+### ST
+> To Do
+  "ST":   {"type": 2, "code": "10000100"}
+### SUB
+> To Do
+  "SUB":  {"type": 2, "code": "10100001"}
+### XOR
+> To Do
+  "XOR":  {"type": 2, "code": "10101011"}

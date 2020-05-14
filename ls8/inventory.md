@@ -56,20 +56,20 @@ run()
 ## Examples
 
 ### call.ls8
-* `LDI R1,MULT2PRINT`
-* `LDI R0,10`
-* `CALL R1`
-* `LDI R0,15`
-* `CALL R1`
-* `LDI R0,18`
-* `CALL R1`
-* `LDI R0,30`
-* `CALL R1`
-* `HLT`
+* `LDI R1,MULT2PRINT`  -- set line pointer value to register 1
+* `LDI R0,10` -- set value 10 to register 0
+* `CALL R1` -- Call subroutine based on pointer in register 1
+* `LDI R0,15` -- set value 15 to register 0
+* `CALL R1` -- Call subroutine based on pointer in register 1
+* `LDI R0,18` -- set value 18 to register 0
+* `CALL R1` -- Call subroutine based on pointer in register 1
+* `LDI R0,30` -- set value 30 to register 0
+* `CALL R1` -- Call subroutine based on pointer in register 1
+* `HLT` -- Stop
 MULT2PRINT (address 24):
-* `ADD R0,R0`
-* `PRN R0`
-* `RET`
+* `ADD R0,R0` -- Add value from register 0 to itself
+* `PRN R0` -- print new value from register 0
+* `RET` -- return to pointer on stack
 
 ### interrupts.ls8
 * `LDI R0,0XF8`

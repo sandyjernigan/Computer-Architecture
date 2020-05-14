@@ -153,13 +153,13 @@ HELLO (address 38):
 * `LDI R1,2` -- set value "2" to register 1
 * `PUSH R0` -- push value from register 0 to stack
 * `PUSH R1` -- push value from register 1 to stack
-* `LDI R0,3` -- set value "3" to register 3
-* `POP R0` -- pop value from register 0
+* `LDI R0,3` -- set value "3" to register 0
+* `POP R0` -- pop value to register 0
 * `PRN R0` -- print value on register 0 (Prints 2 because the orginial register 0 was removed)
 * `LDI R0,4` -- set value "4" to register 0
 * `PUSH R0` -- push value from register 0 to stack
-* `POP R2` -- pop value from register 2
-* `POP R1` -- pop value from register 1
+* `POP R2` -- pop value to register 2
+* `POP R1` -- pop value to register 1
 * `PRN R2` -- print value in register 2
 * `PRN R1` -- print value in register 1
 * `HLT` -- Stop

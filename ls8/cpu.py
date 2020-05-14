@@ -4,9 +4,9 @@ import sys
 
 # Opcodes
 OPCODES = {
-    "ADD":  {"type": 9, "code": "10100000"},
+    "ADD":  {"type": 8, "code": "10100000"},
     "AND":  {"type": 9, "code": "10101000"},
-    "CALL": {"type": 9, "code": "01010000"},
+    "CALL": {"type": 7, "code": "01010000"},
     "CMP":  {"type": 9, "code": "10100111"},
     "DEC":  {"type": 9, "code": "01100110"},
     "DIV":  {"type": 9, "code": "10100011"},
@@ -32,7 +32,7 @@ OPCODES = {
     "PRA":  {"type": 9, "code": "01001000"},
     "PRN":  {"type": 1, "code": "01000111"},
     "PUSH": {"type": 1, "code": "01000101"},
-    "RET":  {"type": 9, "code": "00010001"},
+    "RET":  {"type": 7, "code": "00010001"},
     "SHL":  {"type": 9, "code": "10101100"},
     "SHR":  {"type": 9, "code": "10101101"},
     "ST":   {"type": 9, "code": "10000100"},
@@ -272,6 +272,10 @@ class CPU:
                     self.OPS(OP, self.pc + 1, self.pc + 2)
                     # move to next counter
                     self.pc += 3
+                
+                elif OP_type == 7:
+                    # PC mutators
+                    self.OPS(OP)
 
                 elif OP_type == 8:
                     # ALU Functions - self.alu(op, reg_a, reg_b)
@@ -304,7 +308,13 @@ class CPU:
             1. The address of the ***instruction*** _directly after_ `CALL` is pushed onto the stack. This allows us to return to where we left off when the subroutine finishes executing.
             2. The PC is set to the address stored in the given register. We jump to that location in RAM and execute the first instruction in the subroutine. The PC can move forward or backwards from its current location.
             """
-            pass
+            # store next line to execute onto the stack
+            self.reg[self.SP] -= 1
+            self.ram[self.reg[self.SP]] = self.pc + 2
+            # read which register stores out next line passed
+            register = self.ram[self.pc + 1]
+            # set the PC to the value in that register
+            self.pc = self.reg[register]
 
         # TODO
         elif op == "INT":
@@ -377,7 +387,6 @@ class CPU:
             """ No operation. Do nothing for this instruction. """
             pass
 
-        # TODO
         elif op == "POP":
             """ Pop the value at the top of the stack into the given register. """
             # Copy the value from the address pointed to by `SP` to the given register.
@@ -412,7 +421,11 @@ class CPU:
         elif op == "RET":
             """ Return from subroutine. """
             # Pop the value from the top of the stack and store it in the `PC`.
-            pass
+            return_address = self.ram[self.reg[self.SP]]
+            # increment the stack pointer
+            self.reg[self.SP] += 1
+            # set the pc to that value
+            self.pc = return_address
 
         # TODO
         elif op == "ST": 

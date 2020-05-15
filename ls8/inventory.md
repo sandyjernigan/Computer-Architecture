@@ -202,19 +202,28 @@ LOOP (address 9):
 > Set the value of a register to an integer.
 "LDI": "code": "10000010"
 
+## Type 7 -- PC 
+
+### CALL
+> Calls a subroutine (function) at the address stored in the register.
+"CALL": "code": "01010000"
+
+### RET
+> Return from subroutine
+"RET": "code": "00010001"
+
 ## Type 8 - ALU Operations
+
+### ADD
+> Add the value in two registers and store the result in registerA.
+"ADD":  "code": "10100000"
 
 ### MUL
 > ALU operation - Multiply the values in two registers together and store the result in registerA.
-  "MUL":  {"type": 2, "code": "10100010"}
-
+"MUL":  "code": "10100010"
 
 
 ## Type 9 - TO DO 
-
-### CALL
-> To Do
-  "CALL": {"type": 1, "code": "01010000"}
 
 ### DEC
 > To Do
@@ -232,9 +241,6 @@ LOOP (address 9):
 > To Do
   "JEQ":  {"type": 1, "code": "01010101"}
 
-### ADD
-> To Do
-  "ADD":  {"type": 2, "code": "10100000"}
 
 ### AND
 > To Do
@@ -288,9 +294,6 @@ LOOP (address 9):
 ### PRA
 > To Do
   "PRA":  {"type": 1, "code": "01001000"}
-### RET
-> To Do
-  "RET":  {"type": 0, "code": "00010001"}
 
 ### SHL
 > To Do

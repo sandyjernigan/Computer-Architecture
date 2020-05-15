@@ -5,7 +5,7 @@ import sys
 # Opcodes
 OPCODES = {
     "ADD":  {"type": 8, "code": "10100000"},
-    "AND":  {"type": 9, "code": "10101000"},
+    "AND":  {"type": 8, "code": "10101000"},
     "CALL": {"type": 7, "code": "01010000"},
     "CMP":  {"type": 9, "code": "10100111"},
     "DEC":  {"type": 9, "code": "01100110"},
@@ -39,8 +39,8 @@ OPCODES = {
     "SUB":  {"type": 9, "code": "10100001"},
     "XOR":  {"type": 9, "code": "10101011"},
 }
-def OP(opcode):
-    return int(OPCODES[opcode]["code"], 2)
+# def OP(opcode):
+#     return int(OPCODES[opcode]["code"], 2)
 
 class CPU:
     """Main CPU class."""
@@ -124,10 +124,9 @@ class CPU:
         if op == "ADD":
             # Add the value in two registers and store the result in registerA.
             self.reg[reg_a] += self.reg[reg_b]
-        # TODO
         elif op == "AND":
             # Bitwise-AND the values in registerA and registerB, then store the result in registerA.
-            pass
+            self.reg[reg_a] &= self.reg[reg_b]
         # TODO
         elif op == "CMP":
             """
@@ -301,7 +300,6 @@ class CPU:
     def OPS(self, op, *args):
         # Call Operation by opcode
 
-        # TODO
         if op == "CALL":
             """ Calls a subroutine (function) at the address stored in the register. """
             """
@@ -417,7 +415,6 @@ class CPU:
             # Copy the value in the given register to the address pointed to by `SP`.
             self.ram[self.reg[self.SP]] = self.reg[self.ram[args[0]]]
 
-        # TODO
         elif op == "RET":
             """ Return from subroutine. """
             # Pop the value from the top of the stack and store it in the `PC`.

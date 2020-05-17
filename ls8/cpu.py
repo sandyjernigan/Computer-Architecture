@@ -32,10 +32,11 @@ OPCODES = {
     "PRA":  {"type": 9, "code": "01001000"},
     "PRN":  {"type": 1, "code": "01000111"},
     "PUSH": {"type": 1, "code": "01000101"},
+    "RAM":  {"type": 1, "code": "11101100"},
     "RET":  {"type": 7, "code": "00010001"},
     "SHL":  {"type": 9, "code": "10101100"},
     "SHR":  {"type": 9, "code": "10101101"},
-    "ST":   {"type": 9, "code": "10000100"},
+    "ST":   {"type": 2, "code": "10000100"},
     "SUB":  {"type": 9, "code": "10100001"},
     "XOR":  {"type": 9, "code": "10101011"},
 }
@@ -370,6 +371,7 @@ class CPU:
         elif op == "LD":
             """ Loads registerA with the value at the memory address stored in registerB. """
             # This opcode reads from memory.
+            register = self.ram_read(args[0])
 
         elif op == "LDI":
             """ Set the value of a register to an integer. """
@@ -424,11 +426,20 @@ class CPU:
             # set the pc to that value
             self.pc = return_address
 
-        # TODO
         elif op == "ST": 
             """ Store value in registerB in the address stored in registerA. """
             # This opcode writes to memory.
-            pass
+            # register A, the address
+            address = self.reg[self.ram_read(args[0])]
+            # register B, value
+            value = self.reg[self.ram_read(args[1])]
+            # store in ram
+            self.ram_write(address, value)
+        
+        elif op == "RAM":
+            """ Print numeric value stored in the given ram. """
+            address = self.ram_read(args[0])
+            print(self.ram_read(address))
 
         else:
             print (f"Operation {op} invalid.")

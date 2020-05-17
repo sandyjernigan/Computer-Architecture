@@ -218,6 +218,10 @@ LOOP (address 9):
 > Add the value in two registers and store the result in registerA.
 "ADD":  "code": "10100000"
 
+### AND
+> Bitwise-AND the values in registerA and registerB, then store the result in registerA.
+"AND":  "code": "10101000"
+
 ### MUL
 > ALU operation - Multiply the values in two registers together and store the result in registerA.
 "MUL":  "code": "10100010"
@@ -240,11 +244,6 @@ LOOP (address 9):
 ### JEQ
 > To Do
   "JEQ":  {"type": 1, "code": "01010101"}
-
-
-### AND
-> To Do
-  "AND":  {"type": 2, "code": "10101000"}
 
 ### CMP
 > To Do

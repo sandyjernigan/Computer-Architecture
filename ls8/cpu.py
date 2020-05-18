@@ -382,11 +382,14 @@ class CPU:
                 self.OPS("JMP")
             else: 
                 self.pc += 2
-
-        # TODO
         elif op == "JLE":
             """ If `less-than` flag or `equal` flag is set (true), jump to the address stored in the given register."""
-            pass
+            # Check flag
+            flag = self.reg[self.FL]
+            if (int(flag, 2) & 1) == 1 or (int(flag >> 2, 2) & 1):
+                self.OPS("JMP")
+            else: 
+                self.pc += 2
 
         # TODO
         elif op == "JLT":

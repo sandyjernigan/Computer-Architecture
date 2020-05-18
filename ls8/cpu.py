@@ -197,12 +197,10 @@ class CPU:
             """ Shift the value in registerA left by the number of bits specified in registerB, 
                 filling the low bits with 0. """
             self.reg[reg_a] = self.reg[reg_a] << self.reg[reg_b]
-        # TODO
         elif op == "SHR":
             """ Shift the value in registerA right by the number of bits specified in registerB,
                 filling the high bits with 0. """
-            pass
-        
+            self.reg[reg_a] = self.reg[reg_a] >> self.reg[reg_b]        
         elif op == "SUB":
             """ Subtract the value in the second register from the first, storing the result in registerA. """
             self.reg[reg_a] = self.reg[reg_a] - self.reg[reg_b]

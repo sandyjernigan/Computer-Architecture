@@ -175,14 +175,15 @@ class CPU:
         elif op == "INC":
             """Increment (add 1 to) the value in the given register."""
             self.reg[reg_a] += 1
-
-        # TODO
         elif op == "MOD":
             """
             Divide the value in the first register by the value in the second,  storing the _remainder_ of the result in registerA.
             If the value in the second register is 0, the system should print an error message and halt.
             """
-            pass
+            if self.reg[reg_b] == 0:
+                print ("Error: Cannot divide by 0")
+            else:
+                self.reg[reg_a] = self.reg[reg_a] % self.reg[reg_b]
         elif op == "MUL":
             """ Multiply the values in two registers together and store the result in registerA. """
             self.reg[reg_a] *= self.reg[reg_b]

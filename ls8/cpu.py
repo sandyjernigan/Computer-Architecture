@@ -160,7 +160,6 @@ class CPU:
         elif op == "DEC":
             """Decrement (subtract 1 from) the value in the given register."""
             self.reg[reg_a] -= 1
-        # TODO
         elif op == "DIV":
             """
             Divide the value in the first register by the value in the second,
@@ -169,12 +168,14 @@ class CPU:
             If the value in the second register is 0, the system should print an
             error message and halt.
             """
-            pass
-
+            if self.reg[reg_b] == 0:
+                print ("Error: Cannot divide by 0")
+            else:
+                self.reg[reg_a] = self.reg[reg_a] / self.reg[reg_b]
         elif op == "INC":
             """Increment (add 1 to) the value in the given register."""
             self.reg[reg_a] += 1
-            
+
         # TODO
         elif op == "MOD":
             """

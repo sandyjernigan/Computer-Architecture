@@ -74,6 +74,7 @@ class CPU:
         self.mdr = 0
 
         """ Flags """ 
+        self.FL = 4
         # The flags register FL holds the current flags status. These flags can change based on the operands given to the CMP opcode.
         # The register is made up of 8 bits. If a particular bit is set, that flag is "true".
 
@@ -140,15 +141,18 @@ class CPU:
             """
             Compare the values in two registers.
 
-            * If they are equal, set the Equal `E` flag to 1, otherwise set it to 0.
-
             * If registerA is less than registerB, set the Less-than `L` flag to 1,
             otherwise set it to 0.
 
             * If registerA is greater than registerB, set the Greater-than `G` flag
             to 1, otherwise set it to 0.
             """
-            pass
+            # FL bits: 00000LGE
+
+            # If they are equal, set the Equal `E` flag to 1, otherwise set it to 0.
+            if self.reg[reg_a] == self.reg[reg_b]:
+                self.reg[self.FL] = 1 # 00000001
+
         # TODO
         elif op == "DEC":
             """Decrement (subtract 1 from) the value in the given register."""

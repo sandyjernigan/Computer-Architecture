@@ -187,12 +187,12 @@ class CPU:
         # TODO
         elif op == "NOT":
             """ Perform a bitwise-NOT on the value in a register, storing the result in the register. """
-            pass
+            self.reg[reg_a] = ~ self.reg[reg_a]
 
         elif op == "OR":
             """ Perform a bitwise-OR between the values in registerA and registerB, storing the result in registerA. """
             self.reg[reg_a] = self.reg[reg_a] | self.reg[reg_b]
-            
+
         # TODO
         elif op == "SHL":
             """ Shift the value in registerA left by the number of bits specified in registerB, 

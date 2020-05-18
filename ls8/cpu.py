@@ -136,7 +136,6 @@ class CPU:
         elif op == "AND":
             # Bitwise-AND the values in registerA and registerB, then store the result in registerA.
             self.reg[reg_a] &= self.reg[reg_b]
-        # TODO
         elif op == "CMP":
             """ Compare the values in two registers. FL bits: 00000LGE """
             flag = 0
@@ -386,12 +385,12 @@ class CPU:
         elif op == "JLT":
             """ If `less-than` flag is set (true), jump to the address stored in the given register. """
             pass
-
-        # TODO
         elif op == "JMP":
             """ Jump to the address stored in the given register. """
             # Set the `PC` to the address stored in the given register.
-            pass
+            register = self.ram[self.pc + 1]
+            # set the PC to the value in that register
+            self.pc = self.reg[register]
 
         # TODO
         elif op == "JNE":

@@ -404,7 +404,6 @@ class CPU:
             register = self.ram[self.pc + 1]
             # set the PC to the value in that register
             self.pc = self.reg[register]
-
         elif op == "JNE":
             """ If `E` flag is clear (false, 0), jump to the address stored in the given register. """
             # Check flag
@@ -413,13 +412,16 @@ class CPU:
                 self.OPS("JMP")
             else: 
                 self.pc += 2
-
-        # TODO
         elif op == "LD":
             """ Loads registerA with the value at the memory address stored in registerB. """
             # This opcode reads from memory.
-            register = self.ram_read(args[0])
-
+            reg_a = args[0]
+            reg_b = args[1]
+            # Address stored in register b
+            address = self.reg[reg_b]
+            value = self.ram_read(address)
+            # Load value into register a
+            self.reg[reg_a] = value
         elif op == "LDI":
             """ Set the value of a register to an integer. """
             # get register address from ram value

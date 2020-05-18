@@ -40,6 +40,7 @@ OPCODES = {
     "SUB":  "10100001",
     "XOR":  "10101011",
 }
+limit = 99
 
 class CPU:
     """Main CPU class."""
@@ -140,13 +141,13 @@ class CPU:
             """ Compare the values in two registers. FL bits: 00000LGE """
             flag = 0
 
-            # If registerA is greater than registerB, set the Greater-than `G` flag to 1
-            if self.reg[reg_a] > self.reg[reg_b]:
+            # If registerA is less than registerB, set the Less-than `L` flag to 1
+            if self.reg[reg_a] < self.reg[reg_b]:
                 flag += 1
             flag = flag << 1
 
-            # If registerA is less than registerB, set the Less-than `L` flag to 1
-            if self.reg[reg_a] < self.reg[reg_b]:
+            # If registerA is greater than registerB, set the Greater-than `G` flag to 1
+            if self.reg[reg_a] > self.reg[reg_b]:
                 flag += 1
             flag = flag << 1
 
@@ -155,7 +156,7 @@ class CPU:
                 flag += 1
             
             self.reg[self.FL] = bin(flag)
-            # print (self.reg[self.FL])
+            print (f"Compare: {self.reg[reg_a]} and {self.reg[reg_b]} = Flag: {self.reg[self.FL]}")
 
         # TODO
         elif op == "DEC":
@@ -250,7 +251,7 @@ class CPU:
         running = True
         i = 0
 
-        while running and i < 99:
+        while running and i < limit:
             i+=1
             # read the memory address that's stored in register PC and store that result in IR
             self.ir = self.ram_read(self.pc)
@@ -279,13 +280,15 @@ class CPU:
                     else:
                         OP_type = op_num >> 6
                     
-                    # print (f"Operation {OP}, type: {OP_type}")
                     break
+
+            #TODO: Remove this trace
+            # print (f"Operation {OP}, type: {OP_type}")
 
             if OP == "HLT":
                 """ Halt the CPU (and exit the emulator). """
                 # stop running
-                print ("End")
+                print ("    ~    ")
                 running = False
 
             elif not OP == "":
@@ -364,7 +367,15 @@ class CPU:
         # TODO
         elif op == "JEQ":
             """ If `equal` flag is set (true), jump to the address stored in the given register. """
-            pass
+            # Check flag
+            flag = self.reg[self.FL]
+            print (f"Flag: {flag}")
+            if (int(flag, 2) & 1) == 1:
+                print(f"Jump to: {self.pc + 1}")
+                self.OPS("JMP")
+            else: 
+                print (f"Not Equal")
+                self.pc += 2
 
         # TODO
         elif op == "JGE":
@@ -392,10 +403,14 @@ class CPU:
             # set the PC to the value in that register
             self.pc = self.reg[register]
 
-        # TODO
         elif op == "JNE":
             """ If `E` flag is clear (false, 0), jump to the address stored in the given register. """
-            pass
+            if self.FL % 2 == 0:
+                print(f"Not Equal - Jump to: {self.pc + 1}")
+                self.OPS("JMP")
+            else: 
+                print (f"Equal")
+                self.pc += 2
 
         # TODO
         elif op == "LD":

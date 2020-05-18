@@ -170,10 +170,11 @@ class CPU:
             error message and halt.
             """
             pass
-        # TODO
+
         elif op == "INC":
             """Increment (add 1 to) the value in the given register."""
-            pass
+            self.reg[reg_a] += 1
+            
         # TODO
         elif op == "MOD":
             """
@@ -184,7 +185,6 @@ class CPU:
         elif op == "MUL":
             """ Multiply the values in two registers together and store the result in registerA. """
             self.reg[reg_a] *= self.reg[reg_b]
-        # TODO
         elif op == "NOT":
             """ Perform a bitwise-NOT on the value in a register, storing the result in the register. """
             self.reg[reg_a] = ~ self.reg[reg_a]

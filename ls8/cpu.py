@@ -157,11 +157,9 @@ class CPU:
             
             self.reg[self.FL] = bin(flag)
             # print (f"Compare: {self.reg[reg_a]} and {self.reg[reg_b]} = Flag: {self.reg[self.FL]}")
-
-        # TODO
         elif op == "DEC":
             """Decrement (subtract 1 from) the value in the given register."""
-            pass
+            self.reg[reg_a] -= 1
         # TODO
         elif op == "DIV":
             """

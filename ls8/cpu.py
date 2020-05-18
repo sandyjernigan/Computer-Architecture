@@ -156,7 +156,7 @@ class CPU:
                 flag += 1
             
             self.reg[self.FL] = bin(flag)
-            print (f"Compare: {self.reg[reg_a]} and {self.reg[reg_b]} = Flag: {self.reg[self.FL]}")
+            # print (f"Compare: {self.reg[reg_a]} and {self.reg[reg_b]} = Flag: {self.reg[self.FL]}")
 
         # TODO
         elif op == "DEC":
@@ -369,12 +369,9 @@ class CPU:
             """ If `equal` flag is set (true), jump to the address stored in the given register. """
             # Check flag
             flag = self.reg[self.FL]
-            print (f"Flag: {flag}")
             if (int(flag, 2) & 1) == 1:
-                print(f"Jump to: {self.pc + 1}")
                 self.OPS("JMP")
             else: 
-                print (f"Not Equal")
                 self.pc += 2
 
         # TODO
@@ -405,11 +402,11 @@ class CPU:
 
         elif op == "JNE":
             """ If `E` flag is clear (false, 0), jump to the address stored in the given register. """
-            if self.FL % 2 == 0:
-                print(f"Not Equal - Jump to: {self.pc + 1}")
+            # Check flag
+            flag = self.reg[self.FL]
+            if (int(flag, 2) & 1) == 0:
                 self.OPS("JMP")
             else: 
-                print (f"Equal")
                 self.pc += 2
 
         # TODO

@@ -433,7 +433,6 @@ class CPU:
         elif op == "NOP":
             """ No operation. Do nothing for this instruction. """
             pass
-
         elif op == "POP":
             """ Pop the value at the top of the stack into the given register. """
             # Copy the value from the address pointed to by `SP` to the given register.
@@ -456,14 +455,12 @@ class CPU:
             register = self.reg[address]
             # print value
             print (register)
-
         elif op == "PUSH":
             """ Push the value in the given register on the stack. """
             # Decrement the `SP`.
             self.reg[self.SP] -= 1
             # Copy the value in the given register to the address pointed to by `SP`.
             self.ram[self.reg[self.SP]] = self.reg[self.ram[args[0]]]
-
         elif op == "RET":
             """ Return from subroutine. """
             # Pop the value from the top of the stack and store it in the `PC`.
@@ -472,7 +469,6 @@ class CPU:
             self.reg[self.SP] += 1
             # set the pc to that value
             self.pc = return_address
-
         elif op == "ST": 
             """ Store value in registerB in the address stored in registerA. """
             # This opcode writes to memory.
@@ -482,11 +478,9 @@ class CPU:
             value = self.reg[self.ram_read(args[1])]
             # store in ram
             self.ram_write(address, value)
-        
         elif op == "RAM":
             """ Print numeric value stored in the given ram. """
             address = self.ram_read(args[0])
             print(f"Value at RAM: {self.ram_read(address)}")
-
         else:
             print (f"Operation {op} invalid.")

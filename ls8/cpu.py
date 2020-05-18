@@ -192,6 +192,7 @@ class CPU:
         elif op == "OR":
             """ Perform a bitwise-OR between the values in registerA and registerB, storing the result in registerA. """
             self.reg[reg_a] = self.reg[reg_a] | self.reg[reg_b]
+            
         # TODO
         elif op == "SHL":
             """ Shift the value in registerA left by the number of bits specified in registerB, 
@@ -202,16 +203,14 @@ class CPU:
             """ Shift the value in registerA right by the number of bits specified in registerB,
                 filling the high bits with 0. """
             pass
-        # TODO
+        
         elif op == "SUB":
             """ Subtract the value in the second register from the first, storing the result in registerA. """
-            pass
-
+            self.reg[reg_a] = self.reg[reg_a] - self.reg[reg_b]
         elif op == "XOR":
             """ Perform a bitwise-XOR between the values in registerA and registerB, storing the
                 result in registerA. """
             self.reg[reg_a] = self.reg[reg_a] ^ self.reg[reg_b]
-        # TODO
         else:
             raise Exception("Unsupported ALU operation")
 

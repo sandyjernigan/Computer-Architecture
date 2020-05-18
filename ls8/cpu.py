@@ -4,44 +4,42 @@ import sys
 
 # Opcodes
 OPCODES = {
-    "ADD":  {"type": 8, "code": "10100000"},
-    "AND":  {"type": 8, "code": "10101000"},
-    "CALL": {"type": 7, "code": "01010000"},
-    "CMP":  {"type": 9, "code": "10100111"},
-    "DEC":  {"type": 9, "code": "01100110"},
-    "DIV":  {"type": 9, "code": "10100011"},
-    "HLT":  {"type": 0, "code": "00000001"},
-    "INC":  {"type": 9, "code": "01100101"},
-    "INT":  {"type": 9, "code": "01010010"},
-    "IRET": {"type": 9, "code": "00010011"},
-    "JEQ":  {"type": 9, "code": "01010101"},
-    "JGE":  {"type": 9, "code": "01011010"},
-    "JGT":  {"type": 9, "code": "01010111"},
-    "JLE":  {"type": 9, "code": "01011001"},
-    "JLT":  {"type": 9, "code": "01011000"},
-    "JMP":  {"type": 9, "code": "01010100"},
-    "JNE":  {"type": 9, "code": "01010110"},
-    "LD":   {"type": 9, "code": "10000011"},
-    "LDI":  {"type": 2, "code": "10000010"},
-    "MOD":  {"type": 9, "code": "10100100"},
-    "MUL":  {"type": 8, "code": "10100010"},
-    "NOP":  {"type": 9, "code": "00000000"},
-    "NOT":  {"type": 9, "code": "01101001"},
-    "OR":   {"type": 9, "code": "10101010"},
-    "POP":  {"type": 1, "code": "01000110"},
-    "PRA":  {"type": 9, "code": "01001000"},
-    "PRN":  {"type": 1, "code": "01000111"},
-    "PUSH": {"type": 1, "code": "01000101"},
-    "RAM":  {"type": 1, "code": "11101100"},
-    "RET":  {"type": 7, "code": "00010001"},
-    "SHL":  {"type": 9, "code": "10101100"},
-    "SHR":  {"type": 9, "code": "10101101"},
-    "ST":   {"type": 2, "code": "10000100"},
-    "SUB":  {"type": 9, "code": "10100001"},
-    "XOR":  {"type": 9, "code": "10101011"},
+    "ADD":  "10100000",
+    "AND":  "10101000",
+    "CALL": "01010000",
+    "CMP":  "10100111",
+    "DEC":  "01100110",
+    "DIV":  "10100011",
+    "HLT":  "00000001",
+    "INC":  "01100101",
+    "INT":  "01010010",
+    "IRET": "00010011",
+    "JEQ":  "01010101",
+    "JGE":  "01011010",
+    "JGT":  "01010111",
+    "JLE":  "01011001",
+    "JLT":  "01011000",
+    "JMP":  "01010100",
+    "JNE":  "01010110",
+    "LD":   "10000011",
+    "LDI":  "10000010",
+    "MOD":  "10100100",
+    "MUL":  "10100010",
+    "NOP":  "00000000",
+    "NOT":  "01101001",
+    "OR":   "10101010",
+    "POP":  "01000110",
+    "PRA":  "01001000",
+    "PRN":  "01000111",
+    "PUSH": "01000101",
+    "RAM":  "01001111",
+    "RET":  "00010001",
+    "SHL":  "10101100",
+    "SHR":  "10101101",
+    "ST":   "10000100",
+    "SUB":  "10100001",
+    "XOR":  "10101011",
 }
-# def OP(opcode):
-#     return int(OPCODES[opcode]["code"], 2)
 
 class CPU:
     """Main CPU class."""
@@ -249,12 +247,31 @@ class CPU:
             # read the memory address that's stored in register PC and store that result in IR
             self.ir = self.ram_read(self.pc)
             OP = ""
-            OP_type = ""
+            OP_type = None
 
             for opcode in OPCODES:
-                if int(OPCODES[opcode]["code"], 2) == self.ir:
+                op_num = int(OPCODES[opcode], 2)
+                
+                if op_num == self.ir:
                     OP = opcode
-                    OP_type = OPCODES[opcode]["type"]
+
+                    """ 
+                    Meanings of the bits in the first byte of each instruction: AABCDDDD
+                        AA Number of operands for this opcode, 0-2
+                        B 1 if this is an ALU operation
+                        C 1 if this instruction sets the PC
+                        DDDD Instruction identifier
+                    """
+                    # ALU operation
+                    if (op_num >> 5) & 1:
+                        OP_type = 8
+                    # sets the PC
+                    elif (op_num >> 4) & 1:
+                        OP_type = 9
+                    else:
+                        OP_type = op_num >> 6
+                    
+                    # print (f"Operation {OP}, type: {OP_type}")
                     break
 
             if OP == "HLT":
@@ -281,20 +298,16 @@ class CPU:
                     self.OPS(OP, self.pc + 1, self.pc + 2)
                     # move to next counter
                     self.pc += 3
-                
-                elif OP_type == 7:
-                    # PC mutators
-                    self.OPS(OP)
 
                 elif OP_type == 8:
                     # ALU Functions - self.alu(op, reg_a, reg_b)
                     self.alu(OP, self.ram_read(self.pc + 1), self.ram_read(self.pc + 2))
                     # move to next counter
                     self.pc += 3
-
+                
                 elif OP_type == 9:
-                    print(f"Operation {OP} set TODO. This is incomplete.")
-                    self.pc += 1
+                    # PC mutators
+                    self.OPS(OP)
 
                 else:
                     print (f"Operation {OP} type not found.")
@@ -448,7 +461,7 @@ class CPU:
         elif op == "RAM":
             """ Print numeric value stored in the given ram. """
             address = self.ram_read(args[0])
-            print(self.ram_read(address))
+            print(f"Value at RAM: {self.ram_read(address)}")
 
         else:
             print (f"Operation {op} invalid.")

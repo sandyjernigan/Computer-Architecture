@@ -430,8 +430,6 @@ class CPU:
             value = self.ram_read(args[1])
             # store value into specified register
             self.reg[register] = value
-        
-        # TODO
         elif op == "NOP":
             """ No operation. Do nothing for this instruction. """
             pass

@@ -144,19 +144,16 @@ class CPU:
             # If registerA is greater than registerB, set the Greater-than `G` flag to 1
             if self.reg[reg_a] > self.reg[reg_b]:
                 flag += 1
-                # print("greater")
             flag = flag << 1
 
             # If registerA is less than registerB, set the Less-than `L` flag to 1
             if self.reg[reg_a] < self.reg[reg_b]:
                 flag += 1
-                # print("less")
             flag = flag << 1
 
             # If they are equal, set the Equal `E` flag to 1
             if self.reg[reg_a] == self.reg[reg_b]:
                 flag += 1
-                # print("equal")
             
             self.reg[self.FL] = bin(flag)
             # print (self.reg[self.FL])

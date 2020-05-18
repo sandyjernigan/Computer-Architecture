@@ -11,5 +11,9 @@
 01001111 # RAM - print ram at address -- Should print 4
 01000000
 
+10100111 # CMP R0,R1
+00000000
+00000001
+
 # Stop
 00000001 # HLT

@@ -138,20 +138,27 @@ class CPU:
             self.reg[reg_a] &= self.reg[reg_b]
         # TODO
         elif op == "CMP":
-            """
-            Compare the values in two registers.
+            """ Compare the values in two registers. FL bits: 00000LGE """
+            flag = bin(0)
 
-            * If registerA is less than registerB, set the Less-than `L` flag to 1,
-            otherwise set it to 0.
+            # If registerA is greater than registerB, set the Greater-than `G` flag to 1
+            if self.reg[reg_a] > self.reg[reg_b]:
+                flag = int(flag,2) + 1
+                print("greater")
+            flag = flag << 1
 
-            * If registerA is greater than registerB, set the Greater-than `G` flag
-            to 1, otherwise set it to 0.
-            """
-            # FL bits: 00000LGE
+            # If registerA is less than registerB, set the Less-than `L` flag to 1
+            if self.reg[reg_a] < self.reg[reg_b]:
+                flag = int(flag,2) + 1
+                print("less")
+            flag = flag << 1
 
-            # If they are equal, set the Equal `E` flag to 1, otherwise set it to 0.
+            # If they are equal, set the Equal `E` flag to 1
             if self.reg[reg_a] == self.reg[reg_b]:
-                self.reg[self.FL] = 1 # 00000001
+                flag = int(flag,2) + 1
+                print("equal")
+            
+            self.reg[self.FL] = bin(flag)
 
         # TODO
         elif op == "DEC":

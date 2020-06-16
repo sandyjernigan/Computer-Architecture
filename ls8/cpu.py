@@ -4,44 +4,43 @@ import sys
 
 # Opcodes
 OPCODES = {
-    "ADD":  {"type": 8, "code": "10100000"},
-    "AND":  {"type": 8, "code": "10101000"},
-    "CALL": {"type": 7, "code": "01010000"},
-    "CMP":  {"type": 9, "code": "10100111"},
-    "DEC":  {"type": 9, "code": "01100110"},
-    "DIV":  {"type": 9, "code": "10100011"},
-    "HLT":  {"type": 0, "code": "00000001"},
-    "INC":  {"type": 9, "code": "01100101"},
-    "INT":  {"type": 9, "code": "01010010"},
-    "IRET": {"type": 9, "code": "00010011"},
-    "JEQ":  {"type": 9, "code": "01010101"},
-    "JGE":  {"type": 9, "code": "01011010"},
-    "JGT":  {"type": 9, "code": "01010111"},
-    "JLE":  {"type": 9, "code": "01011001"},
-    "JLT":  {"type": 9, "code": "01011000"},
-    "JMP":  {"type": 9, "code": "01010100"},
-    "JNE":  {"type": 9, "code": "01010110"},
-    "LD":   {"type": 9, "code": "10000011"},
-    "LDI":  {"type": 2, "code": "10000010"},
-    "MOD":  {"type": 9, "code": "10100100"},
-    "MUL":  {"type": 8, "code": "10100010"},
-    "NOP":  {"type": 9, "code": "00000000"},
-    "NOT":  {"type": 9, "code": "01101001"},
-    "OR":   {"type": 9, "code": "10101010"},
-    "POP":  {"type": 1, "code": "01000110"},
-    "PRA":  {"type": 9, "code": "01001000"},
-    "PRN":  {"type": 1, "code": "01000111"},
-    "PUSH": {"type": 1, "code": "01000101"},
-    "RAM":  {"type": 1, "code": "11101100"},
-    "RET":  {"type": 7, "code": "00010001"},
-    "SHL":  {"type": 9, "code": "10101100"},
-    "SHR":  {"type": 9, "code": "10101101"},
-    "ST":   {"type": 2, "code": "10000100"},
-    "SUB":  {"type": 9, "code": "10100001"},
-    "XOR":  {"type": 9, "code": "10101011"},
+    "ADD":  "10100000",
+    "AND":  "10101000",
+    "CALL": "01010000",
+    "CMP":  "10100111",
+    "DEC":  "01100110",
+    "DIV":  "10100011",
+    "HLT":  "00000001",
+    "INC":  "01100101",
+    "INT":  "01010010",
+    "IRET": "00010011",
+    "JEQ":  "01010101",
+    "JGE":  "01011010",
+    "JGT":  "01010111",
+    "JLE":  "01011001",
+    "JLT":  "01011000",
+    "JMP":  "01010100",
+    "JNE":  "01010110",
+    "LD":   "10000011",
+    "LDI":  "10000010",
+    "MOD":  "10100100",
+    "MUL":  "10100010",
+    "NOP":  "00000000",
+    "NOT":  "01101001",
+    "OR":   "10101010",
+    "POP":  "01000110",
+    "PRA":  "01001000",
+    "PRN":  "01000111",
+    "PUSH": "01000101",
+    "RAM":  "01001111",
+    "RET":  "00010001",
+    "SHL":  "10101100",
+    "SHR":  "10101101",
+    "ST":   "10000100",
+    "SUB":  "10100001",
+    "XOR":  "10101011",
 }
-# def OP(opcode):
-#     return int(OPCODES[opcode]["code"], 2)
+limit = 99
 
 class CPU:
     """Main CPU class."""
@@ -75,6 +74,16 @@ class CPU:
         # MDR: Memory Data Register, holds the value to write or the value just read
         self.mdr = 0
 
+        """ Flags """ 
+        self.FL = 4
+        # The flags register FL holds the current flags status. These flags can change based on the operands given to the CMP opcode.
+        # The register is made up of 8 bits. If a particular bit is set, that flag is "true".
+
+        # FL bits: 00000LGE
+
+        #     L Less-than: during a CMP, set to 1 if registerA is less than registerB, zero otherwise.
+        #     G Greater-than: during a CMP, set to 1 if registerA is greater than registerB, zero otherwise.
+        #     E Equal: during a CMP, set to 1 if registerA is equal to registerB, zero otherwise.
 
     def load(self):
         """Load a program into memory."""
@@ -128,25 +137,29 @@ class CPU:
         elif op == "AND":
             # Bitwise-AND the values in registerA and registerB, then store the result in registerA.
             self.reg[reg_a] &= self.reg[reg_b]
-        # TODO
         elif op == "CMP":
-            """
-            Compare the values in two registers.
+            """ Compare the values in two registers. FL bits: 00000LGE """
+            flag = 0
 
-            * If they are equal, set the Equal `E` flag to 1, otherwise set it to 0.
+            # If registerA is less than registerB, set the Less-than `L` flag to 1
+            if self.reg[reg_a] < self.reg[reg_b]:
+                flag += 1
+            flag = flag << 1
 
-            * If registerA is less than registerB, set the Less-than `L` flag to 1,
-            otherwise set it to 0.
+            # If registerA is greater than registerB, set the Greater-than `G` flag to 1
+            if self.reg[reg_a] > self.reg[reg_b]:
+                flag += 1
+            flag = flag << 1
 
-            * If registerA is greater than registerB, set the Greater-than `G` flag
-            to 1, otherwise set it to 0.
-            """
-            pass
-        # TODO
+            # If they are equal, set the Equal `E` flag to 1
+            if self.reg[reg_a] == self.reg[reg_b]:
+                flag += 1
+            
+            self.reg[self.FL] = bin(flag)
+            # print (f"Compare: {self.reg[reg_a]} and {self.reg[reg_b]} = Flag: {self.reg[self.FL]}")
         elif op == "DEC":
             """Decrement (subtract 1 from) the value in the given register."""
-            pass
-        # TODO
+            self.reg[reg_a] -= 1
         elif op == "DIV":
             """
             Divide the value in the first register by the value in the second,
@@ -155,49 +168,46 @@ class CPU:
             If the value in the second register is 0, the system should print an
             error message and halt.
             """
-            pass
-        # TODO
+            if self.reg[reg_b] == 0:
+                print ("Error: Cannot divide by 0")
+            else:
+                self.reg[reg_a] = self.reg[reg_a] / self.reg[reg_b]
         elif op == "INC":
             """Increment (add 1 to) the value in the given register."""
-            pass
-        # TODO
+            self.reg[reg_a] += 1
         elif op == "MOD":
             """
             Divide the value in the first register by the value in the second,  storing the _remainder_ of the result in registerA.
             If the value in the second register is 0, the system should print an error message and halt.
             """
-            pass
+            if self.reg[reg_b] == 0:
+                print ("Error: Cannot divide by 0")
+            else:
+                self.reg[reg_a] = self.reg[reg_a] % self.reg[reg_b]
         elif op == "MUL":
             """ Multiply the values in two registers together and store the result in registerA. """
             self.reg[reg_a] *= self.reg[reg_b]
-        # TODO
         elif op == "NOT":
             """ Perform a bitwise-NOT on the value in a register, storing the result in the register. """
-            pass
-        # TODO
+            self.reg[reg_a] = ~ self.reg[reg_a]
         elif op == "OR":
             """ Perform a bitwise-OR between the values in registerA and registerB, storing the result in registerA. """
-            pass
-        # TODO
+            self.reg[reg_a] = self.reg[reg_a] | self.reg[reg_b]
         elif op == "SHL":
             """ Shift the value in registerA left by the number of bits specified in registerB, 
                 filling the low bits with 0. """
-            pass
-        # TODO
+            self.reg[reg_a] = self.reg[reg_a] << self.reg[reg_b]
         elif op == "SHR":
             """ Shift the value in registerA right by the number of bits specified in registerB,
                 filling the high bits with 0. """
-            pass
-        # TODO
+            self.reg[reg_a] = self.reg[reg_a] >> self.reg[reg_b]        
         elif op == "SUB":
             """ Subtract the value in the second register from the first, storing the result in registerA. """
-            pass
-        # TODO
+            self.reg[reg_a] = self.reg[reg_a] - self.reg[reg_b]
         elif op == "XOR":
             """ Perform a bitwise-XOR between the values in registerA and registerB, storing the
                 result in registerA. """
-            pass
-        # TODO
+            self.reg[reg_a] = self.reg[reg_a] ^ self.reg[reg_b]
         else:
             raise Exception("Unsupported ALU operation")
 
@@ -235,23 +245,44 @@ class CPU:
         running = True
         i = 0
 
-        while running and i < 99:
+        while running and i < limit:
             i+=1
             # read the memory address that's stored in register PC and store that result in IR
             self.ir = self.ram_read(self.pc)
             OP = ""
-            OP_type = ""
+            OP_type = None
 
             for opcode in OPCODES:
-                if int(OPCODES[opcode]["code"], 2) == self.ir:
+                op_num = int(OPCODES[opcode], 2)
+                
+                if op_num == self.ir:
                     OP = opcode
-                    OP_type = OPCODES[opcode]["type"]
+
+                    """ 
+                    Meanings of the bits in the first byte of each instruction: AABCDDDD
+                        AA Number of operands for this opcode, 0-2
+                        B 1 if this is an ALU operation
+                        C 1 if this instruction sets the PC
+                        DDDD Instruction identifier
+                    """
+                    # ALU operation
+                    if (op_num >> 5) & 1:
+                        OP_type = 8
+                    # sets the PC
+                    elif (op_num >> 4) & 1:
+                        OP_type = 9
+                    else:
+                        OP_type = op_num >> 6
+                    
                     break
+
+            #TODO: Remove this trace
+            # print (f"Operation {OP}, type: {OP_type}")
 
             if OP == "HLT":
                 """ Halt the CPU (and exit the emulator). """
                 # stop running
-                print ("End")
+                print ("    ~    ")
                 running = False
 
             elif not OP == "":
@@ -272,20 +303,16 @@ class CPU:
                     self.OPS(OP, self.pc + 1, self.pc + 2)
                     # move to next counter
                     self.pc += 3
-                
-                elif OP_type == 7:
-                    # PC mutators
-                    self.OPS(OP)
 
                 elif OP_type == 8:
                     # ALU Functions - self.alu(op, reg_a, reg_b)
                     self.alu(OP, self.ram_read(self.pc + 1), self.ram_read(self.pc + 2))
                     # move to next counter
                     self.pc += 3
-
+                
                 elif OP_type == 9:
-                    print(f"Operation {OP} set TODO. This is incomplete.")
-                    self.pc += 1
+                    # PC mutators
+                    self.OPS(OP)
 
                 else:
                     print (f"Operation {OP} type not found.")
@@ -331,48 +358,70 @@ class CPU:
             """
             pass
         
-        # TODO
         elif op == "JEQ":
             """ If `equal` flag is set (true), jump to the address stored in the given register. """
-            pass
-
-        # TODO
+            # Check flag
+            flag = self.reg[self.FL]
+            if (int(flag, 2) & 1) == 1:
+                self.OPS("JMP")
+            else: 
+                self.pc += 2
         elif op == "JGE":
             """ If `greater-than` flag or `equal` flag is set (true), jump to the address stored in the given register. """
-            pass
-
-        # TODO
+            # Check flag
+            flag = self.reg[self.FL]
+            if (int(flag, 2) & 1) == 1 or (int(flag >> 1, 2) & 1):
+                self.OPS("JMP")
+            else: 
+                self.pc += 2
         elif op == "JGT":
             """ If `greater-than` flag is set (true), jump to the address stored in the given register. """
-            pass
-
-        # TODO
+            # Check flag
+            flag = self.reg[self.FL]
+            if (int(flag >> 1, 2) & 1):
+                self.OPS("JMP")
+            else: 
+                self.pc += 2
         elif op == "JLE":
             """ If `less-than` flag or `equal` flag is set (true), jump to the address stored in the given register."""
-            pass
-
-        # TODO
+            # Check flag
+            flag = self.reg[self.FL]
+            if (int(flag, 2) & 1) == 1 or (int(flag >> 2, 2) & 1):
+                self.OPS("JMP")
+            else: 
+                self.pc += 2
         elif op == "JLT":
             """ If `less-than` flag is set (true), jump to the address stored in the given register. """
-            pass
-
-        # TODO
+            # Check flag
+            flag = self.reg[self.FL]
+            if (int(flag >> 2, 2) & 1):
+                self.OPS("JMP")
+            else: 
+                self.pc += 2
         elif op == "JMP":
             """ Jump to the address stored in the given register. """
             # Set the `PC` to the address stored in the given register.
-            pass
-
-        # TODO
+            register = self.ram[self.pc + 1]
+            # set the PC to the value in that register
+            self.pc = self.reg[register]
         elif op == "JNE":
             """ If `E` flag is clear (false, 0), jump to the address stored in the given register. """
-            pass
-
-        # TODO
+            # Check flag
+            flag = self.reg[self.FL]
+            if (int(flag, 2) & 1) == 0:
+                self.OPS("JMP")
+            else: 
+                self.pc += 2
         elif op == "LD":
             """ Loads registerA with the value at the memory address stored in registerB. """
             # This opcode reads from memory.
-            register = self.ram_read(args[0])
-
+            reg_a = args[0]
+            reg_b = args[1]
+            # Address stored in register b
+            address = self.reg[reg_b]
+            value = self.ram_read(address)
+            # Load value into register a
+            self.reg[reg_a] = value
         elif op == "LDI":
             """ Set the value of a register to an integer. """
             # get register address from ram value
@@ -381,12 +430,9 @@ class CPU:
             value = self.ram_read(args[1])
             # store value into specified register
             self.reg[register] = value
-        
-        # TODO
         elif op == "NOP":
             """ No operation. Do nothing for this instruction. """
             pass
-
         elif op == "POP":
             """ Pop the value at the top of the stack into the given register. """
             # Copy the value from the address pointed to by `SP` to the given register.
@@ -409,14 +455,12 @@ class CPU:
             register = self.reg[address]
             # print value
             print (register)
-
         elif op == "PUSH":
             """ Push the value in the given register on the stack. """
             # Decrement the `SP`.
             self.reg[self.SP] -= 1
             # Copy the value in the given register to the address pointed to by `SP`.
             self.ram[self.reg[self.SP]] = self.reg[self.ram[args[0]]]
-
         elif op == "RET":
             """ Return from subroutine. """
             # Pop the value from the top of the stack and store it in the `PC`.
@@ -425,7 +469,6 @@ class CPU:
             self.reg[self.SP] += 1
             # set the pc to that value
             self.pc = return_address
-
         elif op == "ST": 
             """ Store value in registerB in the address stored in registerA. """
             # This opcode writes to memory.
@@ -435,11 +478,9 @@ class CPU:
             value = self.reg[self.ram_read(args[1])]
             # store in ram
             self.ram_write(address, value)
-        
         elif op == "RAM":
             """ Print numeric value stored in the given ram. """
             address = self.ram_read(args[0])
-            print(self.ram_read(address))
-
+            print(f"Value at RAM: {self.ram_read(address)}")
         else:
             print (f"Operation {op} invalid.")
